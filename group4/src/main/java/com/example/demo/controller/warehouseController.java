@@ -1,5 +1,8 @@
 package com.example.demo.controller;
 
+import com.example.demo.Const.FIXED_SETTING;
+import com.example.demo.Const.MESSAGE;
+import com.example.demo.Const.URL;
 import com.example.demo.domain.warehouseBean;
 import com.example.demo.exception.AddException;
 import com.example.demo.exception.DeleteException;
@@ -21,7 +24,6 @@ import java.util.List;
  * 仓库相关的控制类
  *
  * @author 杨添
- *
  */
 @CrossOrigin
 @RestController
@@ -33,59 +35,59 @@ public class warehouseController {
 
     // 创建仓库
     @ResponseBody
-    @GetMapping(value = "/saveWarehouse", produces = "application/json; charset=utf-8")
-    public String addWarehouse(@Param("whName")String whName,@Param("whAddress") String whAddress)throws SelectException {
+    @GetMapping(value = URL.ADD_WARE, produces = FIXED_SETTING.JSON_PRODUCE)
+    public String addWarehouse(@Param(FIXED_SETTING.WAREHOUSE_NAME) String whName, @Param(FIXED_SETTING.WAREHOUSE_ADDR) String whAddress) throws SelectException {
         JSONObject jo = new JSONObject();
         try {
-            if(warehouseService.selectWarehouse2(whName)==null){
-                warehouseService.addWarehouse(whName,whAddress);
-                return jo.fromObject(generator.getSuccessResult("添加成功")).toString();
+            if (warehouseService.selectWarehouse2(whName) == null) {
+                warehouseService.addWarehouse(whName, whAddress);
+                return jo.fromObject(generator.getSuccessResult(MESSAGE.INSERT_SUC)).toString();
             } else {
-                return jo.fromObject(generator.getFailResult("仓库已存在")).toString();
+                return jo.fromObject(generator.getFailResult(MESSAGE.ALREADY_EXIS)).toString();
             }
-        }catch(AddException e){
-            return jo.fromObject(generator.getFailResult("创建异常")).toString();
+        } catch (AddException e) {
+            return jo.fromObject(generator.getFailResult(MESSAGE.INSERT_ERR)).toString();
         }
     }
 
     // 关闭仓库
     @ResponseBody
-    @GetMapping(value = "/deleteWarehouse", produces = "application/json; charset=utf-8")
-    public String deleteWarehouse(@Param("whName")String whName){
+    @GetMapping(value = URL.DEL_WARE, produces = FIXED_SETTING.JSON_PRODUCE)
+    public String deleteWarehouse(@Param(FIXED_SETTING.WAREHOUSE_NAME) String whName) {
         JSONObject jo = new JSONObject();
-        try{
+        try {
             warehouseService.closeWarehouse(whName);
-            return jo.fromObject(generator.getSuccessResult("关闭成功")).toString();
-        }catch (DeleteException e){
-            return jo.fromObject(generator.getFailResult("关闭异常")).toString();
+            return jo.fromObject(generator.getSuccessResult(MESSAGE.FROZE_SUC)).toString();
+        } catch (DeleteException e) {
+            return jo.fromObject(generator.getFailResult(MESSAGE.FROZE_ERR)).toString();
         }
     }
 
     // 修改仓库信息
     @ResponseBody
-    @GetMapping(value = "/changeWarehouse", produces = "application/json; charset=utf-8")
-    public String changeWarehouse(@Param("newName")String newName,@Param("whName") String whName,
-                                  @Param("newAddress") String newAddress){
+    @GetMapping(value = URL.UPDT_WARE, produces = FIXED_SETTING.JSON_PRODUCE)
+    public String changeWarehouse(@Param(FIXED_SETTING.NEW_NAME) String newName, @Param(FIXED_SETTING.WAREHOUSE_NAME) String whName,
+                                  @Param(FIXED_SETTING.NEW_ADDR) String newAddress) {
         JSONObject jo = new JSONObject();
-        try{
-            warehouseService.changeWarehouse(newName,whName,newAddress);
-            return jo.fromObject(generator.getSuccessResult("修改成功")).toString();
-        }catch (UpdateException e){
-            return jo.fromObject(generator.getFailResult("修改异常")).toString();
+        try {
+            warehouseService.changeWarehouse(newName, whName, newAddress);
+            return jo.fromObject(generator.getSuccessResult(MESSAGE.MODIFY_SUC)).toString();
+        } catch (UpdateException e) {
+            return jo.fromObject(generator.getFailResult(MESSAGE.MODIFY_ERR)).toString();
         }
     }
 
     // 查询仓库
     @ResponseBody
-    @GetMapping(value = "/selectWarehouse", produces = "application/json; charset=utf-8")
-    public String selectWarehouse(@Param("keyword")String keyword){
+    @GetMapping(value = URL.QUEY_WARE, produces = FIXED_SETTING.JSON_PRODUCE)
+    public String selectWarehouse(@Param(FIXED_SETTING.KEY) String keyword) {
         JSONObject jo = new JSONObject();
         List<warehouseBean> list = null;
-        try{
+        try {
             list = warehouseService.selectWarehouse(keyword);
-            return jo.fromObject(generator.getSuccessResult("查询成功",list)).toString();
-        }catch (SelectException e){
-            return jo.fromObject(generator.getFailResult("查询异常")).toString();
+            return jo.fromObject(generator.getSuccessResult(MESSAGE.QUERY_SUC, list)).toString();
+        } catch (SelectException e) {
+            return jo.fromObject(generator.getFailResult(MESSAGE.QUERY_ERR)).toString();
         }
     }
 }
