@@ -37,7 +37,6 @@ public class cargoController {
     @GetMapping(value = "/savaCargo", produces = "application/json; charset=utf-8")
     public String saveCargo(@Param("cargoName") String cargoName)throws SelectException{
         JSONObject jo = new JSONObject();
-        System.out.println(cargoName);
         try{
             if(cargoService.selectCargo2(cargoName)==null){
                 cargoService.saveCargo(cargoName);
