@@ -12,7 +12,6 @@ import java.util.List;
  * 货物service类
  *
  * @author 杨添
- *
  */
 @Service
 public class cargoService {
@@ -21,9 +20,9 @@ public class cargoService {
 
     // 添加货物
     public void saveCargo(String cargoName) throws AddException {
-        try{
+        try {
             cargoMapper.saveCargo(cargoName);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new AddException(e);
         }
@@ -31,9 +30,9 @@ public class cargoService {
 
     // 删除货物
     public void deleteCargo(String cargoName) throws DeleteException {
-        try{
+        try {
             cargoMapper.deleteCargo(cargoName);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new DeleteException(e);
         }
@@ -49,10 +48,10 @@ public class cargoService {
 
     // 精确查询货物
     public cargoBean selectCargo2(String keyword) throws SelectException {
-        try{
+        try {
             cargoBean cargoBean = cargoMapper.selectCargo2(keyword);
             return cargoBean;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new SelectException(e);
         }
@@ -60,10 +59,10 @@ public class cargoService {
     }
 
     // 修改货物
-    public void changeCargo(String cargoName, String newName)throws UpdateException{
-        try{
-            cargoMapper.changeCargoName(cargoName,newName);
-        } catch (Exception e){
+    public void changeCargo(String cargoName, String newName) throws UpdateException {
+        try {
+            cargoMapper.changeCargoName(cargoName, newName);
+        } catch (Exception e) {
             e.printStackTrace();
             throw new UpdateException(e);
         }

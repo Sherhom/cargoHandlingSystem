@@ -1,4 +1,5 @@
 package com.example.demo.util;
+
 import com.example.demo.domain.RestResult;
 import com.example.demo.domain.ResultCode;
 import org.springframework.stereotype.Component;
