@@ -1,5 +1,8 @@
 package com.example.demo.controller;
 
+import com.example.demo.Const.FIXED_SETTING;
+import com.example.demo.Const.MESSAGE;
+import com.example.demo.Const.URL;
 import com.example.demo.domain.skuBean;
 import com.example.demo.exception.AddException;
 import com.example.demo.exception.DeleteException;
@@ -21,7 +24,6 @@ import java.util.List;
  * sku相关的控制类
  *
  * @author 杨添
- *
  */
 @CrossOrigin
 @RestController
@@ -33,69 +35,69 @@ public class skuController {
 
     // 添加sku
     @ResponseBody
-    @GetMapping(value = "/saveSku", produces = "application/json; charset=utf-8")
-    public String addSku(@Param("skuColor")String skuColor, @Param("skuType")String skuType,
-                       @Param("cargoId") int cargoId, @Param("whId") int whId,@Param("amount")int amount){
+    @GetMapping(value = URL.ADD_SKU, produces = FIXED_SETTING.JSON_PRODUCE)
+    public String addSku(@Param(FIXED_SETTING.SKU_COLOR) String skuColor, @Param(FIXED_SETTING.SKU_TYPE) String skuType,
+                         @Param(FIXED_SETTING.CARGO_ID) int cargoId, @Param(FIXED_SETTING.WAREHOUSE_ID) int whId, @Param(FIXED_SETTING.AMOUNT) int amount) {
         JSONObject jo = new JSONObject();
-        try{
-            skuService.addSku(skuColor,skuType,cargoId,whId,amount);
-            return jo.fromObject(generator.getSuccessResult("添加成功")).toString();
-        }catch (AddException e){
-            return jo.fromObject(generator.getFailResult("创建异常")).toString();
+        try {
+            skuService.addSku(skuColor, skuType, cargoId, whId, amount);
+            return jo.fromObject(generator.getSuccessResult(MESSAGE.INSERT_SUC)).toString();
+        } catch (AddException e) {
+            return jo.fromObject(generator.getFailResult(MESSAGE.INSERT_ERR)).toString();
         }
     }
 
     // 删除一条sku
     @ResponseBody
-    @GetMapping(value = "/deleteSku", produces = "application/json; charset=utf-8")
-    public String deleteSku(@Param("skuId")int skuId){
+    @GetMapping(value = URL.DEL_SKU, produces = FIXED_SETTING.JSON_PRODUCE)
+    public String deleteSku(@Param(FIXED_SETTING.SKU_ID) int skuId) {
         JSONObject jo = new JSONObject();
-        try{
+        try {
             skuService.deleteSkuById(skuId);
-            return jo.fromObject(generator.getSuccessResult("删除成功")).toString();
-        }catch (DeleteException e){
-            return jo.fromObject(generator.getFailResult("删除异常")).toString();
+            return jo.fromObject(generator.getSuccessResult(MESSAGE.DEL_SUC)).toString();
+        } catch (DeleteException e) {
+            return jo.fromObject(generator.getFailResult(MESSAGE.DEL_ERR)).toString();
         }
     }
 
     // 删除商品对应sku
     @ResponseBody
-    @GetMapping(value = "/deleteSkuByCargo", produces = "application/json; charset=utf-8")
-    public String deleteSkuByCargo(@Param("cargoId")int cargoId){
+    @GetMapping(value = URL.DEL_SKU_BYCARGO, produces = FIXED_SETTING.JSON_PRODUCE)
+    public String deleteSkuByCargo(@Param(FIXED_SETTING.CARGO_ID) int cargoId) {
         JSONObject jo = new JSONObject();
-        try{
+        try {
             skuService.deleteSkuByCargo(cargoId);
-            return jo.fromObject(generator.getSuccessResult("删除成功")).toString();
-        }catch (DeleteException e){
-            return jo.fromObject(generator.getFailResult("删除异常")).toString();
+            return jo.fromObject(generator.getSuccessResult(MESSAGE.DEL_SUC)).toString();
+        } catch (DeleteException e) {
+            return jo.fromObject(generator.getFailResult(MESSAGE.DEL_ERR)).toString();
         }
     }
 
     // 修改sku信息
     @ResponseBody
-    @GetMapping(value = "/changeSku", produces = "application/json; charset=utf-8")
-    public String changeSku(@Param("skuId")int skuId, @Param("skuColor") String skuColor, @Param("skuType") String skuType,
-                            @Param("cargoId") int cargoId,@Param("whId")int whId,@Param("amount")int amount){
+    @GetMapping(value = URL.UPDT_SKU, produces = FIXED_SETTING.JSON_PRODUCE)
+    public String changeSku(@Param(FIXED_SETTING.SKU_ID) int skuId, @Param(FIXED_SETTING.SKU_COLOR) String skuColor, @Param(FIXED_SETTING.SKU_TYPE) String skuType,
+                            @Param(FIXED_SETTING.CARGO_ID) int cargoId, @Param(FIXED_SETTING.WAREHOUSE_ID) int whId, @Param(FIXED_SETTING.AMOUNT) int amount) {
         JSONObject jo = new JSONObject();
-        try{
-            skuService.changeSku(skuId,skuColor,skuType,cargoId,whId,amount);
-            return jo.fromObject(generator.getSuccessResult("修改成功")).toString();
-        }catch (UpdateException e){
-            return jo.fromObject(generator.getFailResult("修改异常")).toString();
+        try {
+            skuService.changeSku(skuId, skuColor, skuType, cargoId, whId, amount);
+            return jo.fromObject(generator.getSuccessResult(MESSAGE.MODIFY_SUC)).toString();
+        } catch (UpdateException e) {
+            return jo.fromObject(generator.getFailResult(MESSAGE.MODIFY_ERR)).toString();
         }
     }
 
     // 查询sku
     @ResponseBody
-    @GetMapping(value = "/SelectSku", produces = "application/json; charset=utf-8")
-    public String selectSku(@Param("cargoId")int cargoId){
+    @GetMapping(value = URL.QUEY_SKU, produces = FIXED_SETTING.JSON_PRODUCE)
+    public String selectSku(@Param(FIXED_SETTING.CARGO_ID) int cargoId) {
         JSONObject jo = new JSONObject();
-        try{
+        try {
             List<skuBean> list = null;
             list = skuService.selectSku(cargoId);
-            return jo.fromObject(generator.getSuccessResult("查询成功",list)).toString();
-        }catch (SelectException e){
-            return jo.fromObject(generator.getFailResult("查询异常")).toString();
+            return jo.fromObject(generator.getSuccessResult(MESSAGE.QUERY_SUC, list)).toString();
+        } catch (SelectException e) {
+            return jo.fromObject(generator.getFailResult(MESSAGE.QUERY_ERR)).toString();
         }
     }
 }

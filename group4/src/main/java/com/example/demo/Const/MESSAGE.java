@@ -8,7 +8,7 @@ public class MESSAGE {
 
     public static final String MODIFY_SUC = "修改成功";
 
-    public static final String MODIFY_ERR= "修改异常";
+    public static final String MODIFY_ERR = "修改异常";
 
     public static final String FROZE_SUC = "关闭成功";
 

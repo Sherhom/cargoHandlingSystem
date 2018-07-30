@@ -15,7 +15,6 @@ import java.util.List;
  * 仓库service类
  *
  * @author 杨添
- *
  */
 @Service
 public class warehouseService {
@@ -23,41 +22,41 @@ public class warehouseService {
     warehouseMapper warehouseMapper;
 
     // 创建仓库
-    public void addWarehouse(String whName,String whAddress) throws AddException{
-        try{
-            warehouseMapper.addWarehouse(whName,whAddress);
-        } catch (Exception e){
+    public void addWarehouse(String whName, String whAddress) throws AddException {
+        try {
+            warehouseMapper.addWarehouse(whName, whAddress);
+        } catch (Exception e) {
             e.printStackTrace();
             throw new AddException(e);
         }
     }
 
     // 关闭仓库
-    public void closeWarehouse(String whName) throws DeleteException{
-        try{
+    public void closeWarehouse(String whName) throws DeleteException {
+        try {
             warehouseMapper.closeWarehouse(whName);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new DeleteException(e);
         }
     }
 
     // 修改仓库
-    public void changeWarehouse(String newName,String whName,String newAddress)throws UpdateException{
-        try{
-            warehouseMapper.changeWarehouse(newName,whName,newAddress);
-        }catch (Exception e){
+    public void changeWarehouse(String newName, String whName, String newAddress) throws UpdateException {
+        try {
+            warehouseMapper.changeWarehouse(newName, whName, newAddress);
+        } catch (Exception e) {
             e.printStackTrace();
             throw new UpdateException(e);
         }
     }
 
     // 模糊查询仓库
-    public List<warehouseBean> selectWarehouse(String keyword)throws SelectException{
+    public List<warehouseBean> selectWarehouse(String keyword) throws SelectException {
         List<warehouseBean> list = null;
         try {
             list = warehouseMapper.selectWarehouse(keyword);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new SelectException(e);
         }
@@ -65,11 +64,11 @@ public class warehouseService {
     }
 
     // 精确查询仓库
-    public warehouseBean selectWarehouse2(String keyword)throws SelectException{
+    public warehouseBean selectWarehouse2(String keyword) throws SelectException {
         warehouseBean warehouseBean;
         try {
             warehouseBean = warehouseMapper.selectWarehouse2(keyword);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new SelectException(e);
         }

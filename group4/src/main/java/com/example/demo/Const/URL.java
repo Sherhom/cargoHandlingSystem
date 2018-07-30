@@ -27,5 +27,5 @@ public class URL {
     public static final String QUEY_WARE = "/selectWarehouse";
 
     public static final String UPDT_WARE = "/changeWarehouse";
-    
+
 }
