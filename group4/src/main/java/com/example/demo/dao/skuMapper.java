@@ -67,7 +67,7 @@ public interface skuMapper {
      * @param wareId
      * @return
      */
-    @Select("DELETE FROM skuInfo WHERE whId = #{wareId}")
+    @Delete("DELETE FROM skuInfo WHERE whId = #{wareId}")
     public int delSkuByWareId(@Param("wareId") int wareId);
 
     /**

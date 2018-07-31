@@ -65,7 +65,7 @@ public interface cargoMapper {
      * @param cargoId
      * @return
      */
-    @Select("SELECT count(1) FROM cargoinfo WHERE cargoId = #{cargoId} AND status = 1")
+    @Select("SELECT * FROM cargoinfo WHERE cargoId = #{cargoId} AND status = 1 LIMIT 1")
     public int cargoEixs(@Param("cargoId") int cargoId);
 
     /**

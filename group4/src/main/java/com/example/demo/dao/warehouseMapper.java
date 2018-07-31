@@ -66,7 +66,7 @@ public interface warehouseMapper {
      * @param wareId
      * @return
      */
-    @Select("SELECT count(1) FROM warehouseInfo WHERE whId = #{wareId} AND status = 1")
+    @Select("SELECT * FROM warehouseInfo WHERE whId = #{wareId} AND status = 1 LIMIT 1")
     public int warehouseEixs(@Param("wareId") int wareId);
 
     /**
