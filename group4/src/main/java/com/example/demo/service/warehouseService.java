@@ -2,10 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dao.warehouseMapper;
 import com.example.demo.domain.warehouseBean;
-import com.example.demo.exception.AddException;
-import com.example.demo.exception.DeleteException;
-import com.example.demo.exception.SelectException;
-import com.example.demo.exception.UpdateException;
+import com.example.demo.exception.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -75,4 +72,56 @@ public class warehouseService {
         return warehouseBean;
     }
 
+    /**
+     * judge weather the WAREHOUSE object is available or not
+     *
+     * @param wareId
+     * @return the current state of the selected WAREHOUSE object
+     * @throws InnerException
+     */
+    public boolean isWareExist(int wareId) throws InnerException {
+        try {
+            int exis = warehouseMapper.warehouseEixs(wareId);
+            if (exis != 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            throw new InnerException(e);
+        }
+    }
+
+    /**
+     * try to get the id of the target WAREHOUSE object
+     *
+     * @param wareName
+     * @return WAREHOUSE object's id
+     * @throws InnerException
+     */
+    public int getWareIdByName(String wareName) throws InnerException {
+        int wareId = 0;
+        try {
+            wareId = warehouseMapper.getWareIdByName(wareName);
+        } catch (Exception e) {
+            throw new InnerException(e);
+        }
+        return wareId;
+    }
+
+    /**
+     * get all WAREHOUSE objects out of database
+     *
+     * @return get all WAREHOUSE objects
+     * @throws SelectException
+     */
+    public List<warehouseBean> getAllWare() throws SelectException {
+        List<warehouseBean> wareAll = null;
+        try {
+            wareAll = warehouseMapper.getAllWarehouse();
+        } catch (Exception e) {
+            throw new SelectException(e);
+        }
+        return wareAll;
+    }
 }

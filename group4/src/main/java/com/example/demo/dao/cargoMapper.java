@@ -10,7 +10,6 @@ import java.util.List;
  * 与货物相关的数据库映射
  *
  * @author 杨添
- *
  */
 @Component
 @Mapper
@@ -59,4 +58,30 @@ public interface cargoMapper {
      */
     @Select("Select * from cargoinfo where cargoName = #{name} ")
     public cargoBean selectCargo2(@Param("name") String name);
+
+    /**
+     * judge if the CARGO object is available
+     *
+     * @param cargoId
+     * @return
+     */
+    @Select("SELECT count(1) FROM cargoinfo WHERE cargoId = #{cargoId} AND status = 1")
+    public int cargoEixs(@Param("cargoId") int cargoId);
+
+    /**
+     * get the Id of the selected CARGO object
+     *
+     * @param cargoName
+     * @return
+     */
+    @Select("SELECT cargoId FROM cargoinfo WHERE cargoName = #{cargoName}")
+    public int getCargoIdByName(@Param("cargoName") String cargoName);
+
+    /**
+     * get all CARGO objects
+     *
+     * @return
+     */
+    @Select("SELECT * FROM cargoinfo")
+    public List<cargoBean> getAllCargo();
 }

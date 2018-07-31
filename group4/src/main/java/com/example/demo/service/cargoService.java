@@ -67,4 +67,57 @@ public class cargoService {
             throw new UpdateException(e);
         }
     }
+
+    /**
+     * judge if the CARGO object is available
+     *
+     * @param cargoId
+     * @return the current state of this CARGO
+     * @throws InnerException
+     */
+    public boolean isCargoExist(int cargoId) throws InnerException {
+        try {
+            int exis = cargoMapper.cargoEixs(cargoId);
+            if (exis != 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            throw new InnerException(e);
+        }
+    }
+
+    /**
+     * get target CARGO object with it's name
+     *
+     * @param cargoName
+     * @return target CARGO object id
+     * @throws InnerException
+     */
+    public int getCargoIdByName(String cargoName) throws InnerException {
+        int cargoId = 0;
+        try {
+            cargoId = cargoMapper.getCargoIdByName(cargoName);
+        } catch (Exception e) {
+            throw new InnerException(e);
+        }
+        return cargoId;
+    }
+
+    /**
+     * get all CARGO objects from database
+     *
+     * @return all CARGO objects
+     * @throws SelectException
+     */
+    public List<cargoBean> getAllCargo() throws SelectException {
+        List<cargoBean> cargoAll = null;
+        try {
+            cargoAll = cargoMapper.getAllCargo();
+        } catch (Exception e) {
+            throw new SelectException(e);
+        }
+        return cargoAll;
+    }
 }
