@@ -4,10 +4,8 @@ import com.example.demo.Const.FIXED_SETTING;
 import com.example.demo.Const.MESSAGE;
 import com.example.demo.Const.URL;
 import com.example.demo.domain.warehouseBean;
-import com.example.demo.exception.AddException;
-import com.example.demo.exception.DeleteException;
-import com.example.demo.exception.SelectException;
-import com.example.demo.exception.UpdateException;
+import com.example.demo.exception.*;
+import com.example.demo.service.skuService;
 import com.example.demo.service.warehouseService;
 import com.example.demo.util.ResultGenerator;
 import net.sf.json.JSONObject;
@@ -31,6 +29,8 @@ public class warehouseController {
     @Autowired
     warehouseService warehouseService;
     @Autowired
+    skuService skuService;
+    @Autowired
     private ResultGenerator generator;
 
     // 创建仓库
@@ -39,6 +39,7 @@ public class warehouseController {
     public String addWarehouse(@Param(FIXED_SETTING.WAREHOUSE_NAME) String whName, @Param(FIXED_SETTING.WAREHOUSE_ADDR) String whAddress) throws SelectException {
         JSONObject jo = new JSONObject();
         try {
+            // WAREHOUSE objects should not share the same key
             if (warehouseService.selectWarehouse2(whName) == null) {
                 warehouseService.addWarehouse(whName, whAddress);
                 return jo.fromObject(generator.getSuccessResult(MESSAGE.INSERT_SUC)).toString();
@@ -56,9 +57,14 @@ public class warehouseController {
     public String deleteWarehouse(@Param(FIXED_SETTING.WAREHOUSE_NAME) String whName) {
         JSONObject jo = new JSONObject();
         try {
+            // clear all the SKU objects that bind with this WAREHOUSE object
+            int target = warehouseService.getWareIdByName(whName);
             warehouseService.closeWarehouse(whName);
+            skuService.delSkuByWareId(target);
             return jo.fromObject(generator.getSuccessResult(MESSAGE.FROZE_SUC)).toString();
         } catch (DeleteException e) {
+            return jo.fromObject(generator.getFailResult(MESSAGE.FROZE_ERR)).toString();
+        } catch (InnerException e) {
             return jo.fromObject(generator.getFailResult(MESSAGE.FROZE_ERR)).toString();
         }
     }
@@ -88,6 +94,24 @@ public class warehouseController {
             return jo.fromObject(generator.getSuccessResult(MESSAGE.QUERY_SUC, list)).toString();
         } catch (SelectException e) {
             return jo.fromObject(generator.getFailResult(MESSAGE.QUERY_ERR)).toString();
+        }
+    }
+
+    /**
+     * get all WAREHOUSE objects
+     *
+     * @return all WAREHOUSE objects (json)
+     */
+    @ResponseBody
+    @GetMapping(value = URL.SHOW_WAREHOUSE, produces = FIXED_SETTING.JSON_PRODUCE)
+    public String listAllWare() {
+        JSONObject jojo = new JSONObject();
+        try {
+            List<warehouseBean> allWare = null;
+            allWare = warehouseService.getAllWare();
+            return jojo.fromObject(generator.getSuccessResult(MESSAGE.QUERY_SUC, allWare)).toString();
+        } catch (SelectException e) {
+            return jojo.fromObject(generator.getFailResult(MESSAGE.QUERY_ERR)).toString();
         }
     }
 }
