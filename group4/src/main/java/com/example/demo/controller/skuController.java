@@ -4,11 +4,10 @@ import com.example.demo.Const.FIXED_SETTING;
 import com.example.demo.Const.MESSAGE;
 import com.example.demo.Const.URL;
 import com.example.demo.domain.skuBean;
-import com.example.demo.exception.AddException;
-import com.example.demo.exception.DeleteException;
-import com.example.demo.exception.SelectException;
-import com.example.demo.exception.UpdateException;
+import com.example.demo.exception.*;
+import com.example.demo.service.cargoService;
 import com.example.demo.service.skuService;
+import com.example.demo.service.warehouseService;
 import com.example.demo.util.ResultGenerator;
 import net.sf.json.JSONObject;
 import org.apache.ibatis.annotations.Param;
@@ -31,6 +30,10 @@ public class skuController {
     @Autowired
     skuService skuService;
     @Autowired
+    cargoService cargoService;
+    @Autowired
+    warehouseService warehouseService;
+    @Autowired
     private ResultGenerator generator;
 
     // 添加sku
@@ -40,9 +43,15 @@ public class skuController {
                          @Param(FIXED_SETTING.CARGO_ID) int cargoId, @Param(FIXED_SETTING.WAREHOUSE_ID) int whId, @Param(FIXED_SETTING.AMOUNT) int amount) {
         JSONObject jo = new JSONObject();
         try {
-            skuService.addSku(skuColor, skuType, cargoId, whId, amount);
-            return jo.fromObject(generator.getSuccessResult(MESSAGE.INSERT_SUC)).toString();
+            if (warehouseService.isWareExist(whId) && cargoService.isCargoExist(cargoId)) {
+                skuService.addSku(skuColor, skuType, cargoId, whId, amount);
+                return jo.fromObject(generator.getSuccessResult(MESSAGE.INSERT_SUC)).toString();
+            } else {
+                return jo.fromObject(generator.getFailResult(MESSAGE.INSERT_ERR)).toString();
+            }
         } catch (AddException e) {
+            return jo.fromObject(generator.getFailResult(MESSAGE.INSERT_ERR)).toString();
+        } catch (InnerException e) {
             return jo.fromObject(generator.getFailResult(MESSAGE.INSERT_ERR)).toString();
         }
     }
@@ -98,6 +107,24 @@ public class skuController {
             return jo.fromObject(generator.getSuccessResult(MESSAGE.QUERY_SUC, list)).toString();
         } catch (SelectException e) {
             return jo.fromObject(generator.getFailResult(MESSAGE.QUERY_ERR)).toString();
+        }
+    }
+
+    /**
+     * get all SKU objects
+     *
+     * @return all SKU objects (json)
+     */
+    @ResponseBody
+    @GetMapping(value = URL.SHOW_SKU, produces = FIXED_SETTING.JSON_PRODUCE)
+    public String listAllSku() {
+        JSONObject jojo = new JSONObject();
+        try {
+            List<skuBean> allSku = null;
+            allSku = skuService.getAllSku();
+            return jojo.fromObject(generator.getSuccessResult(MESSAGE.QUERY_SUC, allSku)).toString();
+        } catch (SelectException e) {
+            return jojo.fromObject(generator.getFailResult(MESSAGE.QUERY_ERR)).toString();
         }
     }
 }
