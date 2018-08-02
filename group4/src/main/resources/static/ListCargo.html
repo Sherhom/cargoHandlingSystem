@@ -5,7 +5,7 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <link rel="stylesheet" href="../layui/css/layui.css"  media="all">
+  <link rel="stylesheet" href="./layui/css/layui.css"  media="all">
   <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
 </head>
 
@@ -19,13 +19,12 @@
 
 <table class="layui-hide" id="LAY_table_user" lay-filter="useruv"></table>
 <script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-primary layui-btn-mini" lay-event="detail">查看</a>
     <a class="layui-btn layui-btn-mini" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
 </script>
 
-
-<script src="../layui/layui.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js "></script>
+<script src="./layui/layui.js"></script>
 <script>
     layui.use('table', function(){
         var table = layui.table;
@@ -33,15 +32,14 @@
         //方法级渲染
         table.render({
             elem: '#LAY_table_user'
-            ,url: 'http://localhost:8080/selectCargo'
+            ,url: '/selectCargo'
             ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
             ,cols: [[
                 {checkbox: true, fixed: true}
-                ,{field:'cargoid', width:100, title: '货物编号', sort: true}
+                ,{field:'cargoId', width:100, title: '货物编号', sort: true}
                 ,{field:'cargoName', width:120, title: '货物名称'}
-                ,{field:'whId', width:100, title: '仓库编号', sort: true}
-                ,{field:'skuId', width:100, title: '商品编号', sort: true}
-                ,{field:'right', title: '操作', width:200,toolbar:"#barDemo"}
+                ,{field:'statu', width:120, title: '货物状态'}
+                ,{field:'right', title: '操作', width:300,toolbar:"#barDemo"}
             ]]
             ,id: 'testReload'
             ,page: true
@@ -60,8 +58,6 @@
             }
         };
 
-
-
         //监听表格复选框选择
         table.on('checkbox(useruv)', function(obj){
             console.log(obj)
@@ -69,19 +65,18 @@
         //监听工具条
         table.on('tool(useruv)', function(obj){
             var data = obj.data;
-            if(obj.event === 'detail'){
-                layer.msg('ID：'+ data.cargoid + ' 的查看操作');
-            } else if(obj.event === 'del'){
+            if(obj.event === 'del'){
                 layer.confirm('真的删除这一条信息吗', function(index){
                     console.log(data);
                     $.ajax({
                         url: "http://localhost:8080/deleteCargo",
-                        type: "POST",
-                        data:{"cargoName":cargoName},
+                        type: "GET",
+                        data:{"cargoName":data.cargoName},
                         dataType: "json",
                         success: function(data){
+                            var a = jQuery.parseJSON(data);
 
-                            if(data.state==1){
+                            if(a.code==200){
                                 obj.del();
                                 layer.close(index);
                                 layer.msg("删除成功", {icon: 6});
@@ -100,13 +95,7 @@
                     ,value: data.cargoName
                 }, function(value, index){
                   EidtCargo(data,value,index,obj);
-                   
-
-
                 });
-
-
-
             }
         });
 
@@ -118,27 +107,24 @@
         function  EidtCargo(data,value,index,obj) {
             $.ajax({
                 url: "http://localhost:8080/updateCargo",
-                type: "POST",
+                type: "GET",
                 data:{"cargoid":data.id,"cargoName":data.cargoName,"newName":value},
                 dataType: "json",
                 success: function(data){
-
-                    if(data.state==1){
-
+                    var a = jQuery.parseJSON(data);
+                    if(a.code==200){
                         layer.close(index);
                         //同步更新表格和缓存对应的值
                         obj.update({
-                          newName: value
+                            cargoName: value
                         });
                         layer.msg("修改成功", {icon: 6});
                     }else{
                         layer.msg("修改失败", {icon: 5});
                     }
                 }
-
             });
         }
-
 
     });
 </script>

@@ -80,13 +80,17 @@ public class cargoController {
         JSONObject jo = new JSONObject();
         try {
             // delete all the SKU objects that bind with this CARGO object
+            System.out.println(cargoName);
             int target = cargoService.getCargoIdByName(cargoName);
+            System.out.println(target);
             cargoService.deleteCargo(cargoName);
             skuService.deleteSkuByCargo(target);
             return jo.fromObject(generator.getSuccessResult(MESSAGE.DEL_SUC)).toString();
         } catch (DeleteException e) {
+            e.printStackTrace();
             return jo.fromObject(generator.getFailResult(MESSAGE.DEL_ERR)).toString();
         } catch (InnerException e) {
+            e.printStackTrace();
             return jo.fromObject(generator.getFailResult(MESSAGE.DEL_ERR)).toString();
         }
     }
@@ -97,9 +101,12 @@ public class cargoController {
     public String updateCargo(@Param(FIXED_SETTING.CARGO_NAME) String cargoName, @Param("newName") String newName) {
         JSONObject jo = new JSONObject();
         try {
+            System.out.println(cargoName);
+            System.out.println(newName);
             cargoService.changeCargo(cargoName, newName);
             return jo.fromObject(generator.getSuccessResult(MESSAGE.MODIFY_SUC)).toString();
         } catch (UpdateException e) {
+            e.printStackTrace();
             return jo.fromObject(generator.getFailResult(MESSAGE.MODIFY_ERR)).toString();
         }
     }
