@@ -128,6 +128,7 @@ public class skuController {
         try {
             List<skuBean> allSku = null;
             allSku = skuService.getAllSku();
+            System.out.println(allSku);
             int count = skuService.getCount();
             skuResultMsg = new SkuResultMsg(0,"",count,allSku);
             System.out.println(skuResultMsg);

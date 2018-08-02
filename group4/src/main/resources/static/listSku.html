@@ -1,12 +1,12 @@
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>layui</title>
-  <meta name="renderer" content="webkit">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <link rel="stylesheet" href="./layui/css/layui.css"  media="all">
-  <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="./layui/css/layui.css"  media="all">
+    <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
 </head>
 
 <div class="demoTable">
@@ -22,8 +22,8 @@
     <a class="layui-btn layui-btn-mini" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
 </script>
-
 <script src="https://code.jquery.com/jquery-3.1.1.min.js "></script>
+
 <script src="./layui/layui.js"></script>
 <script>
     layui.use('table', function(){
@@ -32,14 +32,17 @@
         //方法级渲染
         table.render({
             elem: '#LAY_table_user'
-            ,url: '/selectCargo'
+            ,url: 'http://localhost:8080/showsku'
             ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
             ,cols: [[
                 {checkbox: true, fixed: true}
-                ,{field:'cargoId', width:100, title: '货物编号', sort: true}
-                ,{field:'cargoName', width:120, title: '货物名称'}
-                ,{field:'statu', width:120, title: '货物状态'}
-                ,{field:'right', title: '操作', width:300,toolbar:"#barDemo"}
+                ,{field:'skuId', width:100, title: 'sku编号', sort: true}
+                ,{field:'skuColor', width:120, title: '颜色'}
+                ,{field:'count', width:100, title: '库存', sort: true}
+                ,{field:'skuType', width:100, title: '类型', sort: true}
+                ,{field:'cargoId', width:100, title: '货物ID', sort: true}
+                ,{field:'whId', width:100, title: '仓库ID', sort: true}
+                ,{field:'right', title: '操作', width:200,toolbar:"#barDemo"}
             ]]
             ,id: 'testReload'
             ,page: true
@@ -58,6 +61,8 @@
             }
         };
 
+
+
         //监听表格复选框选择
         table.on('checkbox(useruv)', function(obj){
             console.log(obj)
@@ -69,14 +74,13 @@
                 layer.confirm('真的删除这一条信息吗', function(index){
                     console.log(data);
                     $.ajax({
-                        url: "http://localhost:8080/deleteCargo",
+                        url: "http://localhost:8080/deleteSku",
                         type: "GET",
-                        data:{"cargoName":data.cargoName},
+                        data:{"cargoName":cargoName},
                         dataType: "json",
                         success: function(data){
-                            var a = jQuery.parseJSON(data);
 
-                            if(a.code==200){
+                            if(data.state==1){
                                 obj.del();
                                 layer.close(index);
                                 layer.msg("删除成功", {icon: 6});
@@ -91,11 +95,17 @@
 
                 layer.prompt({
                     formType: 2
-                    ,title: '修改 ID 为 ['+ data.cargoId +'] 的访问量'
-                    ,value: data.cargoName
+                    ,title: '修改 ID 为 ['+ data.skuId +'] 的信息'
+                    ,value: data.skuColor
                 }, function(value, index){
-                  EidtCargo(data,value,index,obj);
+                    EidtSku(data,value,index,obj);
+
+
+
                 });
+
+
+
             }
         });
 
@@ -104,11 +114,11 @@
             active[type] ? active[type].call(this) : '';
         });
 
-        function  EidtCargo(data,value,index,obj) {
+        function  EidtSku(data,value,index,obj) {
             $.ajax({
-                url: "http://localhost:8080/updateCargo",
+                url: "http://localhost:8080/changeSku",
                 type: "GET",
-                data:{"cargoid":data.id,"cargoName":data.cargoName,"newName":value},
+                data:{"skuId":data.id,"skuColor":value,"skuType":data.skuType,"cargoId":data.cargoId,"whId":data.whId,"amount":data.count},
                 dataType: "json",
                 success: function(data){
                     var obj_data = jQuery.parseJSON(data);
@@ -116,15 +126,17 @@
                         layer.close(index);
                         //同步更新表格和缓存对应的值
                         obj.update({
-                            cargoName: value
+                            newName: value
                         });
                         layer.msg("修改成功", {icon: 6});
                     }else{
                         layer.msg("修改失败", {icon: 5});
                     }
                 }
+
             });
         }
+
 
     });
 </script>

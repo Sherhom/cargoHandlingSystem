@@ -78,7 +78,7 @@ public interface skuMapper {
     @Select("SELECT * FROM skuInfo")
     public List<skuBean> getAllSku();
 
-    @Select("SELECT count(*) FROM skuinfo")
+    @Select("SELECT count(*) FROM skuInfo")
     public int getCount();
 
 }
