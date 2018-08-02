@@ -50,6 +50,9 @@ public interface cargoMapper {
     @Select("Select * from cargoinfo where cargoName Like '%${keyword}%' ")
     public List<cargoBean> selectCargo(@Param("keyword") String keyword);
 
+    @Select("Select * from cargoinfo ")
+    public List<cargoBean> selectCargoAll();
+
     /**
      * 查询货物（精确查询）
      *
