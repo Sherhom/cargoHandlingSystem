@@ -18,6 +18,10 @@ public class skuService {
     @Resource
     skuMapper skuMapper;
 
+    public int getCount(){
+        return skuMapper.getCount();
+    }
+
     // 添加sku
     public void addSku(String skuColor, String skuType, int cargoId, int whId, int count) throws AddException {
         try {

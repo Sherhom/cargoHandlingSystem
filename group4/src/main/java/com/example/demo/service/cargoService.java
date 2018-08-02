@@ -18,6 +18,12 @@ public class cargoService {
     @Resource
     cargoMapper cargoMapper;
 
+
+    //
+    public int getCount(){
+        return cargoMapper.getCount();
+    }
+
     // 添加货物
     public void saveCargo(String cargoName) throws AddException {
         try {
@@ -46,17 +52,17 @@ public class cargoService {
         return list;
     }
 
-    // 模糊查询货物
-    public List<cargoBean> selectCargoAll(String keyword) throws SelectException {
-        System.out.println(keyword);
-        List<cargoBean> list = null;
-        if(keyword==null){
-            list = cargoMapper.selectCargoAll();
-        }else {
-            list = cargoMapper.selectCargo(keyword);
-        }
-        return list;
-    }
+//    // 模糊查询货物
+//    public List<cargoBean> selectCargoAll(String keyword) throws SelectException {
+//        System.out.println(keyword);
+//        List<cargoBean> list = null;
+//        if(keyword==null){
+//            list = cargoMapper.selectCargoAll();
+//        }else {
+//            list = cargoMapper.selectCargo(keyword);
+//        }
+//        return list;
+//    }
 
     // 精确查询货物
     public cargoBean selectCargo2(String keyword) throws SelectException {

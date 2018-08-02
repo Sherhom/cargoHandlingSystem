@@ -87,4 +87,12 @@ public interface cargoMapper {
      */
     @Select("SELECT * FROM cargoinfo")
     public List<cargoBean> getAllCargo();
+
+    /**
+     * get all CARGO objects
+     *
+     * @return
+     */
+    @Select("SELECT count(*) FROM cargoinfo")
+    public int getCount();
 }

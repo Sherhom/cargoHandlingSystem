@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.Const.FIXED_SETTING;
 import com.example.demo.Const.MESSAGE;
 import com.example.demo.Const.URL;
+import com.example.demo.domain.WarehouseResultMsg;
 import com.example.demo.domain.warehouseBean;
 import com.example.demo.exception.*;
 import com.example.demo.service.skuService;
@@ -32,6 +33,8 @@ public class warehouseController {
     skuService skuService;
     @Autowired
     private ResultGenerator generator;
+
+    WarehouseResultMsg warehouseResultMsg;
 
     // 创建仓库
     @ResponseBody
@@ -86,32 +89,18 @@ public class warehouseController {
     // 查询仓库
     @ResponseBody
     @GetMapping(value = URL.QUEY_WARE, produces = FIXED_SETTING.JSON_PRODUCE)
-    public String selectWarehouse(@Param(FIXED_SETTING.KEY) String keyword) {
+    public WarehouseResultMsg selectWarehouse(@Param(FIXED_SETTING.KEY) String keyword) {
         JSONObject jo = new JSONObject();
         List<warehouseBean> list = null;
         try {
             list = warehouseService.selectWarehouse(keyword);
-            return jo.fromObject(generator.getSuccessResult(MESSAGE.QUERY_SUC, list)).toString();
+            int count = warehouseService.getCount();
+            warehouseResultMsg = new WarehouseResultMsg(0,"",count,list);
+            return warehouseResultMsg;
         } catch (SelectException e) {
-            return jo.fromObject(generator.getFailResult(MESSAGE.QUERY_ERR)).toString();
+            warehouseResultMsg = new WarehouseResultMsg(0,"异常",0,null);
+            return warehouseResultMsg;
         }
     }
 
-    /**
-     * get all WAREHOUSE objects
-     *
-     * @return all WAREHOUSE objects (json)
-     */
-    @ResponseBody
-    @GetMapping(value = URL.SHOW_WAREHOUSE, produces = FIXED_SETTING.JSON_PRODUCE)
-    public String listAllWare() {
-        JSONObject jojo = new JSONObject();
-        try {
-            List<warehouseBean> allWare = null;
-            allWare = warehouseService.getAllWare();
-            return jojo.fromObject(generator.getSuccessResult(MESSAGE.QUERY_SUC, allWare)).toString();
-        } catch (SelectException e) {
-            return jojo.fromObject(generator.getFailResult(MESSAGE.QUERY_ERR)).toString();
-        }
-    }
 }

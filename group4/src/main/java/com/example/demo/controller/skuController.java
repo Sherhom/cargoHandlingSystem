@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.Const.FIXED_SETTING;
 import com.example.demo.Const.MESSAGE;
 import com.example.demo.Const.URL;
+import com.example.demo.domain.SkuResultMsg;
 import com.example.demo.domain.skuBean;
 import com.example.demo.exception.*;
 import com.example.demo.service.cargoService;
@@ -35,6 +36,8 @@ public class skuController {
     warehouseService warehouseService;
     @Autowired
     private ResultGenerator generator;
+
+    private SkuResultMsg skuResultMsg;
 
     // 添加sku
     @ResponseBody
@@ -99,14 +102,18 @@ public class skuController {
     // 查询sku
     @ResponseBody
     @GetMapping(value = URL.QUEY_SKU, produces = FIXED_SETTING.JSON_PRODUCE)
-    public String selectSku(@Param(FIXED_SETTING.CARGO_ID) int cargoId) {
+    public SkuResultMsg selectSku(@Param(FIXED_SETTING.CARGO_ID) int cargoId) {
         JSONObject jo = new JSONObject();
         try {
             List<skuBean> list = null;
+            int count = skuService.getCount();
             list = skuService.selectSku(cargoId);
-            return jo.fromObject(generator.getSuccessResult(MESSAGE.QUERY_SUC, list)).toString();
+            skuResultMsg = new SkuResultMsg(0,"",count,list);
+            System.out.println(skuResultMsg);
+            return skuResultMsg;
         } catch (SelectException e) {
-            return jo.fromObject(generator.getFailResult(MESSAGE.QUERY_ERR)).toString();
+            skuResultMsg = new SkuResultMsg(0,"异常",0,null);
+            return skuResultMsg;
         }
     }
 
@@ -117,14 +124,17 @@ public class skuController {
      */
     @ResponseBody
     @GetMapping(value = URL.SHOW_SKU, produces = FIXED_SETTING.JSON_PRODUCE)
-    public String listAllSku() {
-        JSONObject jojo = new JSONObject();
+    public SkuResultMsg listAllSku() {
         try {
             List<skuBean> allSku = null;
             allSku = skuService.getAllSku();
-            return jojo.fromObject(generator.getSuccessResult(MESSAGE.QUERY_SUC, allSku)).toString();
+            int count = skuService.getCount();
+            skuResultMsg = new SkuResultMsg(0,"",count,allSku);
+            System.out.println(skuResultMsg);
+            return skuResultMsg;
         } catch (SelectException e) {
-            return jojo.fromObject(generator.getFailResult(MESSAGE.QUERY_ERR)).toString();
+            skuResultMsg = new SkuResultMsg(0,"异常",0,null);
+            return skuResultMsg;
         }
     }
 }

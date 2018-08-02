@@ -86,4 +86,7 @@ public interface warehouseMapper {
     @Select("SELECT * FROM warehouseInfo")
     public List<warehouseBean> getAllWarehouse();
 
+    @Select("SELECT count(*) FROM warehouseInfo")
+    public int getCount();
+
 }

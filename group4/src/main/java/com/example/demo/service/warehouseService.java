@@ -18,6 +18,10 @@ public class warehouseService {
     @Resource
     warehouseMapper warehouseMapper;
 
+    public int getCount(){
+        return warehouseMapper.getCount();
+    }
+
     // 创建仓库
     public void addWarehouse(String whName, String whAddress) throws AddException {
         try {

@@ -3,10 +3,12 @@ package com.example.demo.controller;
 import com.example.demo.Const.FIXED_SETTING;
 import com.example.demo.Const.MESSAGE;
 import com.example.demo.Const.URL;
+import com.example.demo.domain.ResultMsg;
 import com.example.demo.exception.*;
 import com.example.demo.service.cargoService;
 import com.example.demo.service.skuService;
 import com.example.demo.util.ResultGenerator;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import com.example.demo.domain.cargoBean;
 import org.apache.ibatis.annotations.Param;
@@ -33,6 +35,8 @@ public class cargoController {
     @Autowired
     private ResultGenerator generator;
 
+    private ResultMsg resultMsg;
+
     @SuppressWarnings(FIXED_SETTING.VIS_PERM)
     // 添加货物
     @ResponseBody
@@ -55,15 +59,17 @@ public class cargoController {
     // 查询货物
     @ResponseBody
     @GetMapping(value = URL.QUEY_CARGO, produces = FIXED_SETTING.JSON_PRODUCE)
-    public String selectCargo(@Param(FIXED_SETTING.KEY) String keyword) {
-        JSONObject jo = new JSONObject();
-        System.out.println(keyword);
+    public ResultMsg selectCargo(@Param(FIXED_SETTING.KEY) String keyword) {
         try {
             List<cargoBean> list = null;
             list = cargoService.selectCargo(keyword);
-            return jo.fromObject(generator.getSuccessResult(MESSAGE.QUERY_SUC, list)).toString();
+            int count = cargoService.getCount();
+            resultMsg = new ResultMsg(0,"",count,list);
+            System.out.println(resultMsg);
+            return resultMsg;
         } catch (SelectException e) {
-            return jo.fromObject(generator.getFailResult(MESSAGE.QUERY_ERR)).toString();
+            resultMsg = new ResultMsg(1,"wrong",0,null);
+            return resultMsg;
         }
     }
 
